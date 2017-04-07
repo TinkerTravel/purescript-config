@@ -26,7 +26,8 @@ main = suite "Data.Config.Node" do
     let c = Triple <$> string {name: "a"}
                    <*> int    {name: "b"}
                    <*> prefix {name: "c"} (string {name: "d"})
-    assert (Left (Set.fromFoldable ["TEST_AP_A", "TEST_AP_B", "TEST_AP_C_D"])) "ap" c
+    liftEff $ setEnv "TEST_AP_A" "foo"
+    assert (Left (Set.fromFoldable ["TEST_AP_B", "TEST_AP_C_D"])) "ap" c
     liftEff do
       setEnv "TEST_AP_A"   "foo"
       setEnv "TEST_AP_B"   "42"
