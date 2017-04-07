@@ -37,11 +37,11 @@ import Data.Config.Node (fromEnv)
 
 main :: ∀ eff. Eff (process :: PROCESS | eff) Unit
 main = do
-  config <- runMaybeT $ fromEnv "DB" postgreSQLPool
+  config <- fromEnv "DB" postgreSQLPool
   ...
 ```
 
 When applied to the above description, it will read these environment variables,
 derived from the `name` fields in the records in the description:
-`DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`. It returns
-`Nothing` if the configuration is incomplete or incorrect.
+`DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`. It returns a set
+of incorrect variables (`Left`), or the complete configuration (`Right`).
