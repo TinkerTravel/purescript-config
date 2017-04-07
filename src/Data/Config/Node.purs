@@ -56,7 +56,6 @@ fromEnv'' p (Optional next) = runExists runOptionalF next
     <#> either (const $ coerceSymm l Nothing)
                (coerceSymm l <<< Just)
     <#> pure
-
 fromEnv'' p (Prefix k next) = fromEnv' (p <> "_" <> k.name) next
 
 lookupEnv'
