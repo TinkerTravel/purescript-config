@@ -53,8 +53,8 @@ fromEnv'' p (Optional next) = runExists runOptionalF next
   runOptionalF :: ∀ b. OptionalF _ _ b -> _
   runOptionalF (OptionalF c l) = wrap $
     fromEnv p c
-    <#> either (const $ coerceSymm l Nothing)
-               (coerceSymm l <<< Just)
+    <#> either (const Nothing) Just
+    <#> coerceSymm l
     <#> pure
 fromEnv'' p (Prefix k next) = fromEnv' (p <> "_" <> k.name) next
 
