@@ -1,7 +1,5 @@
 module Data.Config.Node
   ( fromEnv
-  , fromEnv'
-  , fromEnv''
   ) where
 
 import Control.Applicative.Free (foldFreeAp)
@@ -30,7 +28,6 @@ fromEnv
   -> m (Either (Set String) a)
 fromEnv p c = map (unV Left Right) <<< unwrap $ fromEnv' p c
 
--- | Read configuration from environment variables, with some prefix.
 fromEnv'
   :: ∀ k eff m
    . MonadEff (process :: PROCESS | eff) m
@@ -39,7 +36,6 @@ fromEnv'
   ~> Compose m (V (Set String))
 fromEnv' p = foldFreeAp (fromEnv'' p)
 
--- | Read configuration from environment variables, with some prefix.
 fromEnv''
   :: ∀ k eff m
    . MonadEff (process :: PROCESS | eff) m
