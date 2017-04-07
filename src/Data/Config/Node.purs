@@ -8,10 +8,10 @@ import Control.Applicative.Free (foldFreeAp)
 import Control.Monad.Eff.Class (class MonadEff, liftEff)
 import Data.Config (Config, ConfigF(..))
 import Data.Either (Either(..))
-import Data.Functor.Compose (Compose(..))
+import Data.Functor.Compose (Compose)
 import Data.Int as Int
 import Data.Maybe (Maybe, maybe)
-import Data.Newtype (unwrap)
+import Data.Newtype (unwrap, wrap)
 import Data.Set (Set)
 import Data.Set as Set
 import Data.String as String
@@ -58,4 +58,4 @@ lookupEnv'
 lookupEnv' p k f =
   let l = String.toUpper $ p <> "_" <> k
       e = liftEff $ lookupEnv l <#> (_ >>= f)
-  in Compose $ e <#> maybe (invalid $ Set.singleton l) pure
+  in wrap $ e <#> maybe (invalid $ Set.singleton l) pure
