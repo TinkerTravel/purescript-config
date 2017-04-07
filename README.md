@@ -28,7 +28,10 @@ postgreSQLPool =
 
 ## Interpreters
 
-Currently one interpreter is provided: one that reads environment variables.
+Currently two interpreters are provided.
+
+### Environment variables
+
 This interpreter is called `fromEnv` and can be found in `Data.Config.Node`:
 
 ```purescript
@@ -45,3 +48,11 @@ When applied to the above description, it will read these environment variables,
 derived from the `name` fields in the records in the description:
 `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`. It returns a set
 of incorrect variables (`Left`), or the complete configuration (`Right`).
+
+### Help
+
+This interpreter is called `help` and can be found in `Data.Config.Help`. It
+returns a data structure that represents a help document. It requires that in
+addition to `name` fields, you provide `info` fields with documentation. Passing
+the return value of `help` to `renderHelp` (from the same module) will
+pretty-print the help into a string.
