@@ -1,0 +1,3 @@
+# purescript-config
+
+Applicative configuration.

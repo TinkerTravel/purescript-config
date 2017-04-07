@@ -1,0 +1,21 @@
+{
+  "name": "purescript-config",
+  "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TinkerTravel/purescript-config.git"
+  },
+  "dependencies": {
+    "purescript-eff": "^2.0.0",
+    "purescript-freeap": "^2.0.0",
+    "purescript-integers": "^2.1.1",
+    "purescript-maybe": "^2.1.1",
+    "purescript-node-process": "^3.0.0",
+    "purescript-prelude": "^2.5.0",
+    "purescript-strings": "^2.1.0",
+    "purescript-transformers": "^2.3.0"
+  },
+  "devDependencies": {
+    "purescript-test-unit": "^10.1.0"
+  }
+}
