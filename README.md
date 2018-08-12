@@ -38,7 +38,7 @@ This interpreter is called `fromEnv` and can be found in `Data.Config.Node`:
 import Control.Monad.Maybe.Trans (runMaybeT)
 import Data.Config.Node (fromEnv)
 
-main :: ∀ eff. Eff (process :: PROCESS | eff) Unit
+main :: Effect Unit
 main = do
   config <- fromEnv "DB" postgreSQLPool
   ...

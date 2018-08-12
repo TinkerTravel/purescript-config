@@ -51,7 +51,7 @@ help' r (String {name, info} _) = pure $ Help r name info Nil
 help' r (Int    {name, info} _) = pure $ Help r name info Nil
 help' r (Optional            o) = runExists runOptionalF o
   where
-  runOptionalF :: ∀ b. OptionalF _ _ b -> _
+  runOptionalF :: ∀ b. OptionalF { name :: String , info :: String | k } a b -> List Help
   runOptionalF (OptionalF c' _) = analyzeFreeAp (help' false) c'
 help' r (Prefix {name, info} c) =
   pure $ Help r name info (analyzeFreeAp (help' true) c)

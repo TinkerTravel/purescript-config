@@ -3,7 +3,7 @@ module Data.Config.Node
   ) where
 
 import Control.Applicative.Free (foldFreeAp)
-import Control.Monad.Eff.Class (class MonadEff, liftEff)
+import Effect.Class (class MonadEffect, liftEffect)
 import Data.Config (Config, ConfigF(..), OptionalF(..))
 import Data.Either (Either(..), either)
 import Data.Exists (runExists)
@@ -16,29 +16,29 @@ import Data.Set (Set)
 import Data.Set as Set
 import Data.String as String
 import Data.Validation.Semigroup (V, invalid, unV)
-import Node.Process (PROCESS, lookupEnv)
+import Node.Process (lookupEnv)
 import Prelude
 
 -- | Read configuration from environment variables, with some prefix.
 fromEnv
-  :: ∀ k eff m a
-   . MonadEff (process :: PROCESS | eff) m
+  :: ∀ k m a
+   . MonadEffect m
   => String
   -> Config {name :: String | k} a
   -> m (Either (Set String) a)
 fromEnv p c = map (unV Left Right) <<< unwrap $ fromEnv' p c
 
 fromEnv'
-  :: ∀ k eff m
-   . MonadEff (process :: PROCESS | eff) m
+  :: ∀ k m
+   . MonadEffect m
   => String
   -> Config {name :: String | k}
   ~> Compose m (V (Set String))
 fromEnv' p = foldFreeAp (fromEnv'' p)
 
 fromEnv''
-  :: ∀ k eff m
-   . MonadEff (process :: PROCESS | eff) m
+  :: ∀ k m
+   . MonadEffect m
   => String
   -> ConfigF {name :: String | k}
   ~> Compose m (V (Set String))
@@ -46,7 +46,7 @@ fromEnv'' p (String k next) = next <$> lookupEnv' p k.name pure
 fromEnv'' p (Int    k next) = next <$> lookupEnv' p k.name Int.fromString
 fromEnv'' p (Optional next) = runExists runOptionalF next
   where
-  runOptionalF :: ∀ b. OptionalF _ _ b -> _
+  runOptionalF :: ∀ a b. OptionalF { name :: String | k } a b -> Compose m (V (Set String)) a
   runOptionalF (OptionalF c l) = wrap $
     fromEnv p c
     <#> either (const Nothing) Just
@@ -55,13 +55,13 @@ fromEnv'' p (Optional next) = runExists runOptionalF next
 fromEnv'' p (Prefix k next) = fromEnv' (p <> "_" <> k.name) next
 
 lookupEnv'
-  :: ∀ a eff m
-   . MonadEff (process :: PROCESS | eff) m
+  :: ∀ a m
+   . MonadEffect m
   => String
   -> String
   -> (String -> Maybe a)
   -> Compose m (V (Set String)) a
 lookupEnv' p k f =
   let l = String.toUpper $ p <> "_" <> k
-      e = liftEff $ lookupEnv l <#> (_ >>= f)
+      e = liftEffect $ lookupEnv l <#> (_ >>= f)
   in wrap $ e <#> maybe (invalid $ Set.singleton l) pure

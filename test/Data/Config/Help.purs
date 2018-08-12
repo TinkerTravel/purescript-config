@@ -2,13 +2,15 @@ module Test.Data.Config.Help
   ( main
   ) where
 
-import Control.Monad.Eff.Class (liftEff)
+import Prelude
+
 import Data.Config (int, optional, prefix, string)
 import Data.Config.Help (help, renderHelp)
-import Prelude
-import Test.Unit (suite, test)
+import Effect.Class (liftEffect)
+import Test.Unit (TestSuite, suite, test)
 import Test.Unit.Console (print)
 
+main :: TestSuite
 main = suite "Data.Config.Node" do
   test "example" do
     let c = (\_ _ _ _ -> unit)
@@ -21,4 +23,4 @@ main = suite "Data.Config.Node" do
     let c'' = (\_ _ -> unit)
               <$> c'
               <*> optional (prefix {name: "kek", info: "a kek"} c')
-    liftEff <<< print <<< ("\n" <> _) <<< renderHelp <<< help $ c''
+    liftEffect <<< print <<< ("\n" <> _) <<< renderHelp <<< help $ c''

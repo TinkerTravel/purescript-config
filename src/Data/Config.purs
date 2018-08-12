@@ -31,15 +31,15 @@ data OptionalF k a b
 
 -- | A string setting that can contain any text.
 string :: ∀ k. k -> Config k String
-string = liftFreeAp <<< String `flip` id
+string = liftFreeAp <<< String `flip` identity
 
 -- | An integer setting.
 int :: ∀ k. k -> Config k Int
-int = liftFreeAp <<< Int `flip` id
+int = liftFreeAp <<< Int `flip` identity
 
 -- | An optional setting.
 optional :: ∀ k a. Config k a -> Config k (Maybe a)
-optional c = liftFreeAp <<< Optional $ mkExists (OptionalF c id)
+optional c = liftFreeAp <<< Optional $ mkExists (OptionalF c identity)
 
 -- | A setting with some prefix.
 prefix :: ∀ k a. k -> Config k a -> Config k a
